@@ -10,7 +10,7 @@ const href = localePath(lang, `/projects/${project.slug}/`);
 const searchText = [d.title, d.summary, d.category ?? '', ...d.tags].join(' ').toLowerCase();
 ---
 <article
-  class:list={['card', { featured: d.featured }]}
+  class:list={['card', { featured: d.featured, mc: d.group === 'minecraft' }]}
   data-tags={d.tags.join('|')}
   data-search={searchText}
 >

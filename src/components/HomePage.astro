@@ -9,11 +9,14 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const s = t(lang);
 const projects = await getProjects(lang);
+const works = projects.filter((p) => p.data.group !== 'minecraft');
+const mods = projects.filter((p) => p.data.group === 'minecraft');
 
-// Tags sorted by frequency
+// Tags (of regular works) sorted by frequency — used by the filter chips
 const counts = new Map<string, number>();
-for (const p of projects) for (const tag of p.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+for (const p of works) for (const tag of p.data.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
 const tags = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([k]) => k);
+const allTags = new Set(projects.flatMap((p) => p.data.tags));
 const years = projects.map((p) => p.data.date.getFullYear());
 const since = years.length ? Math.min(...years) : new Date().getFullYear();
 ---
@@ -24,8 +27,9 @@ const since = years.length ? Math.min(...years) : new Date().getFullYear();
     <p class="role reveal d1">{SITE.role[lang]}</p>
     <p class="bio reveal d2">{SITE.bio[lang]}</p>
     <div class="stats reveal d3">
-      <div class="stat"><b>{projects.length}</b><span>{s.projectsCount}</span></div>
-      <div class="stat"><b>{tags.length}</b><span>{s.tagsCount}</span></div>
+      <div class="stat"><b>{works.length}</b><span>{s.projectsCount}</span></div>
+      {mods.length > 0 && <div class="stat mc-stat"><b>{mods.length}</b><span>{s.mcCount}</span></div>}
+      <div class="stat"><b>{allTags.size}</b><span>{s.tagsCount}</span></div>
       <div class="stat"><b>{since}</b><span>{lang === 'zh' ? '開始累積' : 'building since'}</span></div>
     </div>
   </section>
@@ -40,23 +44,41 @@ const since = years.length ? Math.min(...years) : new Date().getFullYear();
       </div>
     </div>
     <div class="grid" data-grid>
-      {projects.map((p) => <ProjectCard project={p} lang={lang} />)}
+      {works.map((p) => <ProjectCard project={p} lang={lang} />)}
     </div>
     <p class="empty" data-empty>{s.empty}</p>
   </section>
+
+  {mods.length > 0 && (
+    <section class="section mc-section" id="minecraft">
+      <div class="wrap">
+        <div class="mc-head">
+          <div class="mc-block" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div>
+            <h2>{s.mcTitle}</h2>
+            <p>{s.mcLead}</p>
+          </div>
+        </div>
+        <div class="grid">
+          {mods.map((p) => <ProjectCard project={p} lang={lang} />)}
+        </div>
+      </div>
+    </section>
+  )}
 
   <section class="section wrap" id="about">
     <div class="about">
       <div class="panel">
         <h2>{s.aboutTitle}</h2>
         <p>{SITE.bio[lang]}</p>
-        <div class="tags">{tags.slice(0, 14).map((tag) => <span class="tag">{tag}</span>)}</div>
+        <div class="tags">{[...allTags].slice(0, 16).map((tag) => <span class="tag">{tag}</span>)}</div>
       </div>
       <div class="panel term" aria-hidden="true">
         <div><span class="accent">$</span> whoami</div>
         <div><span class="k">name</span>: <span class="v">{SITE.name.zh} / {SITE.name.en}</span></div>
         <div><span class="k">role</span>: <span class="v">{SITE.role[lang]}</span></div>
-        <div><span class="k">projects</span>: <span class="v">{projects.length}</span></div>
+        <div><span class="k">projects</span>: <span class="v">{works.length}</span></div>
+        {mods.length > 0 && <div><span class="k">mc_mods</span>: <span class="v">{mods.length}</span></div>}
         <div><span class="k">stack</span>: <span class="v">{tags.slice(0, 4).join(', ')}</span></div>
         <div><span class="accent">$</span> <span class="cursor" style="display:inline-block;width:8px;height:1em;background:var(--accent);vertical-align:-2px"></span></div>
       </div>

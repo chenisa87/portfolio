@@ -5,6 +5,7 @@ date: 2026-10-14
 tags: [Java, Fabric, Minecraft Mod]
 category: 遊戲模組
 status: in-progress
+group: minecraft
 ---
 
 ## 為什麼做

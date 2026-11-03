@@ -4,10 +4,11 @@ import { getProjects } from '../../../lib/projects';
 
 export async function getStaticPaths() {
   const list = await getProjects('en');
-  return list.map((project, i) => ({
-    params: { slug: project.slug },
-    props: { project, prev: list[i - 1], next: list[i + 1] },
-  }));
+  return list.map((project) => {
+    const same = list.filter((p) => p.data.group === project.data.group);
+    const i = same.indexOf(project);
+    return { params: { slug: project.slug }, props: { project, prev: same[i - 1], next: same[i + 1] } };
+  });
 }
 const { project, prev, next } = Astro.props;
 ---

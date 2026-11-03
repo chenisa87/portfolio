@@ -233,3 +233,37 @@ a { color: inherit; text-decoration: none; }
   @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } html { scroll-behavior: auto; } }
+
+/* ---------- Minecraft section ---------- */
+:root { --mc: #7bd85a; --mc-dirt: #8a5a36; }
+.mc-section {
+  position: relative;
+  margin-top: 8px;
+  padding-block: 56px 80px;
+  background:
+    linear-gradient(180deg, rgba(123,216,90,.06), transparent 240px),
+    var(--bg-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.mc-section::before {
+  /* pixel grass strip */
+  content: ''; position: absolute; left: 0; right: 0; top: -1px; height: 8px;
+  background:
+    linear-gradient(90deg, var(--mc) 0 16px, #5fb944 16px 32px, var(--mc) 32px 40px, #4fa236 40px 56px, var(--mc) 56px 64px) 0 0 / 64px 4px repeat-x,
+    linear-gradient(90deg, var(--mc-dirt) 0 24px, #74492b 24px 40px, var(--mc-dirt) 40px 64px) 0 4px / 64px 4px repeat-x;
+  image-rendering: pixelated;
+}
+.mc-head { display: flex; gap: 18px; align-items: center; margin-bottom: 28px; }
+.mc-head h2 { margin: 0; font-family: var(--mono); font-size: 22px; letter-spacing: -0.01em; }
+.mc-head h2::before { content: '> '; color: var(--mc); }
+.mc-head p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.mc-block { width: 44px; height: 44px; flex: none; display: grid; grid-template: 1fr 1fr / 1fr 1fr; border: 2px solid #1d2a17; box-shadow: 0 0 24px rgba(123,216,90,.25); }
+.mc-block i:nth-child(1) { background: var(--mc); } .mc-block i:nth-child(2) { background: #5fb944; }
+.mc-block i:nth-child(3) { background: var(--mc-dirt); } .mc-block i:nth-child(4) { background: #74492b; }
+.card.mc { border-radius: 6px; }
+.card.mc:hover { box-shadow: 0 18px 40px -20px rgba(0,0,0,.8), 0 0 0 1px rgba(123,216,90,.25); }
+.card.mc .tag { border-radius: 3px; }
+.mc-stat b { color: var(--mc); }
+.detail.mc .crumb:hover { color: var(--mc); }
+.detail.mc h1::before { content: ''; display: inline-block; width: .55em; height: .55em; margin-right: .3em; vertical-align: .08em; background: linear-gradient(var(--mc) 50%, var(--mc-dirt) 50%); }

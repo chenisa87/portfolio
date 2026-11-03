@@ -11,12 +11,13 @@ const s = t(lang);
 const d = project.data;
 const { Content } = await render(project);
 const yt = d.video ? youtubeId(d.video) : null;
-const home = localePath(lang, '/') + '#projects';
+const isMc = d.group === 'minecraft';
+const home = localePath(lang, '/') + (isMc ? '#minecraft' : '#projects');
 const href = (p: Project) => localePath(lang, `/projects/${p.slug}/`);
 ---
 <Base lang={lang} title={d.title} description={d.summary} image={d.cover}>
-  <article class="detail wrap">
-    <a class="crumb" href={home}>← {s.back}</a>
+  <article class:list={['detail wrap', { mc: isMc }]}>
+    <a class="crumb" href={home}>← {isMc ? s.backMc : s.back}</a>
 
     <div class="meta-row reveal">
       <span class:list={['badge', d.status]}>{s.status[d.status]}</span>

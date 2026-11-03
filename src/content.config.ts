@@ -12,6 +12,8 @@ const projects = defineCollection({
     category: z.string().optional(),
     status: z.enum(['completed', 'in-progress', 'archived']).default('completed'),
     featured: z.boolean().default(false),
+    // main = 一般作品；minecraft = Minecraft 模組，首頁另外一區顯示
+    group: z.enum(['main', 'minecraft']).default('main'),
     draft: z.boolean().default(false),
     // 圖片放在 public/projects/<slug>/ ，這裡寫 "/projects/<slug>/cover.png"
     cover: z.string().optional(),

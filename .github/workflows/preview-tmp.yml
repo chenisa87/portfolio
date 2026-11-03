@@ -1,0 +1,16 @@
+name: tmp preview
+on: push
+permissions:
+  contents: write
+jobs:
+  b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install --no-audit --no-fund && npm run build
+      - run: |
+          cd dist && git init -q -b dist-preview && git add -A
+          git -c user.name=ci -c user.email=ci@x commit -qm preview
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" dist-preview

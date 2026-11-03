@@ -24,6 +24,7 @@ npm run new -- my-project "中文標題" "English title"
 | `category` | 類別，例如 課程作業、競賽、遊戲模組 |
 | `status` | `completed` / `in-progress` / `archived` |
 | `featured` | `true` 會置頂並以大卡片顯示 |
+| `group` | `main`（預設，一般作品）或 `minecraft`（首頁獨立的 Minecraft 模組區） |
 | `draft` | `true` 則不公開 |
 | `cover` / `images` | `/projects/<slug>/cover.png` 等 |
 | `video` | YouTube 網址或 `/projects/<slug>/demo.mp4` |
