@@ -36,7 +36,7 @@ const href = (p: Project) => localePath(lang, `/projects/${p.slug}/`);
       )}
     </div>
 
-    <div class="hero-media reveal d3">
+    {(d.cover || d.video) && <div class="hero-media reveal d3">
       {yt ? (
         <div class="embed">
           <iframe src={`https://www.youtube-nocookie.com/embed/${yt}`} title={d.title} loading="lazy"
@@ -47,7 +47,7 @@ const href = (p: Project) => localePath(lang, `/projects/${p.slug}/`);
       ) : (
         <Cover src={d.cover} title={d.title} slug={project.slug} eager />
       )}
-    </div>
+    </div>}
 
     <div class="layout">
       <div>

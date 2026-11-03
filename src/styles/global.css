@@ -70,7 +70,7 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 560px) { .nav .hide-sm { display: none; } }
 
 /* ---------- hero ---------- */
-.hero { padding: 88px 0 56px; }
+.hero { padding-block: 88px 56px; }
 .prompt { font-family: var(--mono); font-size: 14px; color: var(--muted); margin-bottom: 18px; }
 .prompt .user { color: var(--accent); }
 .prompt .cursor { display: inline-block; width: 8px; height: 1.1em; background: var(--accent); vertical-align: -3px; margin-left: 4px; animation: blink 1.1s steps(1) infinite; }
@@ -85,7 +85,7 @@ a { color: inherit; text-decoration: none; }
 .stat span { color: var(--muted); font-size: 13px; }
 
 /* ---------- section ---------- */
-.section { padding: 40px 0 72px; }
+.section { padding-block: 40px 72px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
 .section-head h2 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
 .section-head h2::before { content: '// '; color: var(--dim); font-family: var(--mono); font-weight: 400; }
@@ -174,7 +174,7 @@ a { color: inherit; text-decoration: none; }
 .term .v { color: var(--text); }
 
 /* ---------- project detail ---------- */
-.detail { padding: 48px 0 80px; }
+.detail { padding-block: 48px 80px; }
 .crumb { font-family: var(--mono); font-size: 13px; color: var(--muted); display: inline-flex; gap: 8px; margin-bottom: 28px; }
 .crumb:hover { color: var(--accent); }
 .detail h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.1; letter-spacing: -0.025em; margin: 14px 0 14px; }
