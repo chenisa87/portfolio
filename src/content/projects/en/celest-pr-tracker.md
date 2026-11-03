@@ -5,6 +5,7 @@ date: 2026-11-01
 tags: [Java, Fabric, Minecraft Mod, Cloudflare Workers]
 category: Game mod
 status: in-progress
+group: minecraft
 featured: true
 ---
 

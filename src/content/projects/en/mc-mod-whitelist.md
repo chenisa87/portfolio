@@ -5,6 +5,7 @@ date: 2026-10-14
 tags: [JavaScript, Cloudflare Workers, Cloudflare D1, Java, Minecraft Mod]
 category: Game mod
 status: completed
+group: minecraft
 cover: /projects/mc-mod-whitelist/cover.webp
 images: [/projects/mc-mod-whitelist/1.webp, /projects/mc-mod-whitelist/2.webp, /projects/mc-mod-whitelist/3.webp]
 ---
