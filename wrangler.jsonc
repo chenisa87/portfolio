@@ -1,0 +1,9 @@
+{
+  // Cloudflare Workers（靜態網站模式）設定：build 後把 dist/ 發佈出去
+  "name": "portfolio",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

@@ -1,0 +1,67 @@
+---
+import '../styles/global.css';
+import { SITE } from '../site.config.mjs';
+import { t, localePath, switchPath, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  image?: string;
+}
+const { lang, title, description, image } = Astro.props;
+const s = t(lang);
+const name = SITE.name[lang];
+const pageTitle = title ? `${title} — ${name}` : `${name} · ${SITE.role[lang]}`;
+const desc = description ?? SITE.bio[lang];
+const ogImage = image ? new URL(image, Astro.site ?? Astro.url).href : undefined;
+const other = switchPath(lang, Astro.url.pathname);
+const altLang = lang === 'zh' ? 'en' : 'zh-Hant-TW';
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang={s.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={desc} />
+    <meta name="theme-color" content="#0a0c0f" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang={altLang} href={other} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={desc} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href={localePath(lang, '/')}><span class="dot"></span>{SITE.handle}</a>
+        <nav class="nav" aria-label="main">
+          <a href={localePath(lang, '/') + '#projects'}>{s.navProjects}</a>
+          <a class="hide-sm" href={localePath(lang, '/') + '#about'}>{s.navAbout}</a>
+          <a class="hide-sm" href={localePath(lang, '/') + '#contact'}>{s.navContact}</a>
+          <a class="lang-switch" href={other} hreflang={altLang}>{s.switchTo}</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>© {year} {name}</span>
+        <span>{s.builtWith}</span>
+      </div>
+    </footer>
+  </body>
+</html>

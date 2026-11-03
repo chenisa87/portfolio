@@ -1,0 +1,17 @@
+---
+import { hueOf } from '../lib/projects';
+interface Props { src?: string; title: string; slug: string; eager?: boolean }
+const { src, title, slug, eager = false } = Astro.props;
+// Initials for placeholder: first CJK char, or first letters of up to 2 words
+const words = title.trim().split(/\s+/);
+const initials = /[㐀-鿿]/.test(title[0])
+  ? title.slice(0, 2)
+  : words.slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+---
+<div class="cover">
+  {src ? (
+    <img src={src} alt={title} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  ) : (
+    <div class="placeholder" style={`--h:${hueOf(slug)}`}><span>{initials}</span></div>
+  )}
+</div>
