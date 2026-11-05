@@ -1,0 +1,248 @@
+---
+import Base from '../layouts/Base.astro';
+import data from '../data/usage.json';
+import { t, type Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const u = t(lang).usage;
+
+type Day = {
+  date: string; input: number; output: number; cacheWrite: number; cacheRead: number; total: number; models: string[];
+};
+const days: Day[] = ((data as any).days ?? [])
+  .filter((d: Day) => /^\d{4}-\d{2}-\d{2}$/.test(d.date))
+  .sort((a: Day, b: Day) => a.date.localeCompare(b.date));
+const byDate = new Map(days.map((d) => [d.date, d]));
+
+// "today" in Taipei, at build time (the site rebuilds every day)
+const today = new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10);
+const thisMonth = today.slice(0, 7);
+
+const used = days.filter((d) => d.total > 0);
+const total = used.reduce((s, d) => s + d.total, 0);
+const monthSum = used.filter((d) => d.date.startsWith(thisMonth)).reduce((s, d) => s + d.total, 0);
+const latest = used.at(-1);
+const avg = used.length ? Math.round(total / used.length) : 0;
+
+// Intensity levels by quartile of active days
+const sorted = used.map((d) => d.total).sort((a, b) => a - b);
+const q = (p: number) => sorted[Math.min(sorted.length - 1, Math.floor(p * sorted.length))] ?? 0;
+const [q1, q2, q3] = [q(0.25), q(0.5), q(0.75)];
+const level = (v = 0) => (v <= 0 ? 0 : v <= q1 ? 1 : v <= q2 ? 2 : v <= q3 ? 3 : 4);
+
+const full = (n: number) => n.toLocaleString('en-US');
+const compact = (n: number) => {
+  if (n >= 1e9) return `${(n / 1e9).toFixed(n >= 1e10 ? 0 : 1)}B`;
+  if (n >= 1e6) return `${(n / 1e6).toFixed(n >= 1e7 ? 0 : 1)}M`;
+  if (n >= 1e3) return `${(n / 1e3).toFixed(n >= 1e4 ? 0 : 1)}K`;
+  return String(n);
+};
+const monthLabel = (ym: string) => {
+  const [y, m] = ym.split('-').map(Number);
+  return lang === 'zh'
+    ? `${y} 年 ${m} 月`
+    : new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+};
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+
+// Months from first data month to this month
+const firstMonth = days[0]?.date.slice(0, 7) ?? thisMonth;
+const months: { ym: string; lead: number; cells: string[]; sum: number }[] = [];
+{
+  let [y, m] = firstMonth.split('-').map(Number);
+  while (`${y}-${String(m).padStart(2, '0')}` <= thisMonth) {
+    const ym = `${y}-${String(m).padStart(2, '0')}`;
+    const lead = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+    const n = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    const cells = Array.from({ length: n }, (_, i) => `${ym}-${String(i + 1).padStart(2, '0')}`);
+    const sum = cells.reduce((s, c) => s + (byDate.get(c)?.total ?? 0), 0);
+    months.push({ ym, lead, cells, sum });
+    m++; if (m > 12) { m = 1; y++; }
+  }
+}
+const monthMax = Math.max(1, ...months.map((x) => x.sum));
+
+// Past-year heatmap: 53 weeks ending this week
+const end = new Date(`${today}T00:00:00Z`);
+const start = new Date(end); start.setUTCDate(start.getUTCDate() - 364 - start.getUTCDay());
+const weeks: string[][] = [];
+for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+  if (d.getUTCDay() === 0) weeks.push([]);
+  weeks.at(-1)!.push(iso(d));
+}
+
+const updated = (data as any).updatedAt
+  ? new Date((data as any).updatedAt).toLocaleString(lang === 'zh' ? 'zh-TW' : 'en-US', {
+      timeZone: 'Asia/Taipei', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+    })
+  : null;
+
+const clientData = Object.fromEntries(days.map((d) => [d.date, d]));
+const labels = {
+  lang, weekdays: u.weekdays, input: u.input, output: u.output, cacheWrite: u.cacheWrite,
+  cacheRead: u.cacheRead, models: u.models, noUse: u.noUse, total: u.total,
+};
+---
+<Base lang={lang} title={u.title} description={u.lead}>
+  <section class="intro wrap usage-intro">
+    <p class="role fade">{u.kicker}</p>
+    <h1 class="fade d1">{u.title}</h1>
+    <p class="bio fade d1">{u.lead}</p>
+  </section>
+
+  {days.length === 0 ? (
+    <section class="wrap"><p class="notice">{u.empty}</p></section>
+  ) : (
+    <>
+      <section class="wrap fade d2">
+        <div class="stats-row">
+          <div class="stat"><span>{u.total}</span><b title={full(total)}>{compact(total)}</b><small>{full(total)}</small></div>
+          <div class="stat"><span>{u.month}</span><b title={full(monthSum)}>{compact(monthSum)}</b><small>{monthLabel(thisMonth)}</small></div>
+          <div class="stat"><span>{u.latest}</span><b>{latest ? compact(latest.total) : '—'}</b><small>{latest?.date ?? ''}</small></div>
+          <div class="stat"><span>{u.avg}</span><b>{compact(avg)}</b><small>{used.length} {u.days}</small></div>
+        </div>
+      </section>
+
+      <section class="group wrap" id="calendar">
+        <div class="group-head">
+          <span class="num">01</span>
+          <h2>{u.calendar}</h2>
+          <span class="desc">{u.pick}</span>
+        </div>
+
+        <div class="cal" data-cal>
+          {months.map((mo, i) => (
+            <div class="cal-month" data-month={i} hidden={i !== months.length - 1}>
+              <div class="cal-bar">
+                <button class="tool" type="button" data-step="-1" disabled={i === 0} aria-label="previous">←</button>
+                <div class="cal-title">
+                  <b>{monthLabel(mo.ym)}</b>
+                  <span>{u.monthTotal} {full(mo.sum)}</span>
+                </div>
+                <button class="tool" type="button" data-step="1" disabled={i === months.length - 1} aria-label="next">→</button>
+              </div>
+              <div class="cal-grid">
+                {u.weekdays.map((w) => <span class="wd">{w}</span>)}
+                {Array.from({ length: mo.lead }).map(() => <span class="cell blank"></span>)}
+                {mo.cells.map((c) => {
+                  const d = byDate.get(c);
+                  const v = d?.total ?? 0;
+                  return (
+                    <button type="button" class:list={['cell', `l${level(v)}`, { today: c === today, future: c > today }]}
+                      data-date={c} disabled={c > today}>
+                      <span class="dn">{Number(c.slice(8))}</span>
+                      {v > 0 && <span class="dv">{compact(v)}</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          <div class="cal-detail" data-detail aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="group wrap wide-scroll" id="year">
+        <div class="group-head">
+          <span class="num">02</span>
+          <h2>{u.year}</h2>
+          <span class="desc legend">{u.less}<i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>{u.more}</span>
+        </div>
+        <div class="heat-scroll">
+          <div class="heat">
+            {weeks.map((w) => (
+              <div class="heat-col">
+                {w.map((c) => {
+                  const v = byDate.get(c)?.total ?? 0;
+                  return <i class={`l${level(v)}`} title={`${c} · ${full(v)}`}></i>;
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="group wrap" id="months">
+        <div class="group-head">
+          <span class="num">03</span>
+          <h2>{u.months}</h2>
+        </div>
+        <ul class="bars">
+          {months.slice().reverse().map((mo) => (
+            <li>
+              <span class="bl">{mo.ym.replace('-', '.')}</span>
+              <span class="bt"><i style={`width:${(mo.sum / monthMax) * 100}%`}></i></span>
+              <span class="bv">{compact(mo.sum)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="wrap">
+        <p class="usage-note">
+          {updated && <>{u.updated}：{updated}<br /></>}
+          {u.note}
+        </p>
+      </section>
+
+      <script type="application/json" id="usage-data" set:html={JSON.stringify({ days: clientData, labels })}></script>
+    </>
+  )}
+</Base>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-cal]');
+  const raw = document.getElementById('usage-data')?.textContent;
+  if (root && raw) {
+    const { days, labels } = JSON.parse(raw);
+    const months = [...root.querySelectorAll<HTMLElement>('.cal-month')];
+    const detail = root.querySelector<HTMLElement>('[data-detail]')!;
+    let cur = months.length - 1;
+    const fmt = (n: number) => (n ?? 0).toLocaleString('en-US');
+    const short = (m: string) => m.replace(/^claude-/, '').replace(/-\d{8}$/, '');
+
+    const show = (i: number) => {
+      cur = Math.max(0, Math.min(months.length - 1, i));
+      months.forEach((m, j) => (m.hidden = j !== cur));
+    };
+    const select = (btn: HTMLElement) => {
+      root.querySelectorAll('.cell.sel').forEach((c) => c.classList.remove('sel'));
+      btn.classList.add('sel');
+      const date = btn.dataset.date!;
+      const d = days[date];
+      const [y, m, dd] = date.split('-').map(Number);
+      const wd = labels.weekdays[new Date(Date.UTC(y, m - 1, dd)).getUTCDay()];
+      const title = labels.lang === 'zh' ? `${y} 年 ${m} 月 ${dd} 日（${wd}）` : `${wd}, ${date}`;
+      if (!d || !d.total) {
+        detail.innerHTML = `<div class="dt"><b>${title}</b></div><p class="muted">${labels.noUse}</p>`;
+        return;
+      }
+      const rows = [
+        [labels.input, d.input], [labels.output, d.output],
+        [labels.cacheWrite, d.cacheWrite], [labels.cacheRead, d.cacheRead],
+      ].map(([k, v]) => `<div><span>${k}</span><b>${fmt(v as number)}</b></div>`).join('');
+      const models = (d.models ?? []).map((x: string) => `<span>${short(x)}</span>`).join('');
+      detail.innerHTML = `
+        <div class="dt"><b>${title}</b><span>${labels.total} <strong>${fmt(d.total)}</strong></span></div>
+        <div class="dg">${rows}</div>
+        ${models ? `<p class="dm">${labels.models}：${models}</p>` : ''}`;
+    };
+
+    root.addEventListener('click', (e) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('[data-step],[data-date]');
+      if (!el) return;
+      if (el.dataset.step) show(cur + Number(el.dataset.step));
+      else select(el);
+    });
+
+    // Past-year heatmap: start scrolled to the most recent weeks
+    document.querySelectorAll<HTMLElement>('.heat-scroll').forEach((el) => (el.scrollLeft = el.scrollWidth));
+
+    // Default: select the latest day with usage in the visible month, else today
+    const visible = months[cur];
+    const pick = [...visible.querySelectorAll<HTMLElement>('.cell[data-date]:not(.l0):not(.future)')].at(-1)
+      ?? visible.querySelector<HTMLElement>('.cell.today');
+    if (pick) select(pick);
+  }
+</script>
