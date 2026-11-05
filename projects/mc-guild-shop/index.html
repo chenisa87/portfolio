@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="zh-Hant-TW"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Minecraft 商會備貨清單模組 — 吳丞宥</title><meta name="description" content="Fabric 1.21.11 用戶端模組，在伺服器商會介面左邊加上「記錄收購」按鈕，自動讀出本週收購商品，面板直接顯示每樣還差幾個要準備。"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="en" href="/en/projects/mc-guild-shop/"><link rel="sitemap" href="/sitemap-index.xml"><meta property="og:type" content="website"><meta property="og:title" content="Minecraft 商會備貨清單模組 — 吳丞宥"><meta property="og:description" content="Fabric 1.21.11 用戶端模組，在伺服器商會介面左邊加上「記錄收購」按鈕，自動讀出本週收購商品，面板直接顯示每樣還差幾個要準備。"><meta name="twitter:card" content="summary"><script>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/index.BG-YvohO.css"></head> <body> <header class="top"> <div class="wrap"> <a class="brand" href="/">吳丞宥</a> <div class="tools"> <a class="tool" href="/usage/">用量</a> <a class="tool" href="/en/projects/mc-guild-shop/" hreflang="en">EN</a> <button class="tool" type="button" aria-label="切換深淺色" title="切換深淺色" data-theme-toggle> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg> </button> </div> </div> </header> <main>  <article class="article"> <div class="wrap"> <a class="crumb" href="/#minecraft">← Minecraft</a> <div class="kicker fade"> <span>Minecraft</span> <span class="sep">/</span><span>Fabric 1.21.11</span> <span class="sep">/</span> <span>2026.11</span> <span class="pill in-progress">進行中</span> </div> <h1 class="fade d1">Minecraft 商會備貨清單模組</h1> <p class="lead fade d1">Fabric 1.21.11 用戶端模組，在伺服器商會介面左邊加上「記錄收購」按鈕，自動讀出本週收購商品，面板直接顯示每樣還差幾個要準備。</p>   <p class="stack fade d2"><span>Java</span><span>Fabric</span><span>Minecraft Mod</span></p> </div>  <div class="wrap"> <hr class="divider"> <div class="prose"><h2 id="為什麼做">為什麼做</h2>
+<p>伺服器的商會每週收購的商品都不一樣，而且分成一般收購（有單價、預算、還能收幾個）和限量收購（只收一次、交完拿固定報酬）。每次都要一格一格把滑鼠移上去看說明，記不住到底要去準備什麼、還差多少。</p>
+<h2 id="功能">功能</h2>
+<ul>
+<li>打開商會時，介面左邊多一排按鈕：<strong>記錄收購</strong>、<strong>收起／展開</strong>、<strong>清空</strong>（清空要連按兩下，避免誤觸）</li>
+<li>按下「記錄收購」就把這一頁所有收購商品讀進清單，不用一個一個看說明</li>
+<li>旁邊的面板列出每個商品 <strong>還差幾個</strong>（可收數量扣掉背包持有），收滿或背包夠了會變綠色打勾、排到最後</li>
+<li>面板上方會算出「全部交完大約可以拿多少商會幣」</li>
+<li>之後每次打開商會，清單會自動更新剩餘可收數量</li>
+<li><code>/gs</code> 指令在聊天欄只列出「要準備的商品 × 數量」，不在商會時也能看</li>
+</ul>
+<h2 id="做法">做法</h2>
+<ul>
+<li>用 Fabric Screen API 在箱子介面初始化後加入按鈕，用 Mixin Accessor 取得介面的位置，讓按鈕和面板貼在介面左側</li>
+<li>讀取物品的名稱與說明文字（Lore），用正規表示式解析「收購／限量收購」、單價、預算、還能收、需求 × 數量、報酬、背包持有</li>
+<li>只有名稱是「收購 …」或「限量收購 …」、或寫了「需求」的物品才算商品，避免把說明文字、刷新按鈕誤認成商品</li>
+<li>解析邏輯獨立成不依賴 Minecraft 的類別，可以直接拿截圖上的文字寫測試</li>
+<li>清單存在本機 JSON，寫檔放到背景執行緒、先寫暫存檔再替換，遊戲不會卡</li>
+</ul>
+<h2 id="進度">進度</h2>
+<ul>
+<li>1.0.0：按鈕、面板、清單、指令</li>
+<li>1.0.1：支援限量收購；修正把說明文字當成商品的問題；<code>/gs</code> 精簡成只列要準備的商品和數量</li>
+</ul>
+<p>進行中，之後實際使用一陣子再補上截圖和心得。</p></div> <nav class="pager" aria-label="pagination"> <a href="/projects/celest-pr-tracker/"><small>← 上一個</small>文靜PR追蹤 — 副本表現分析模組</a> <a class="next" href="/projects/mc-buff-timer/"><small>下一個 →</small>Minecraft 技能計時模組</a> </nav> </div> </article>  </main> <footer class="foot"> <div class="wrap"> <span>© 2026 吳丞宥</span> <span>以 Astro 打造，部署於 Cloudflare</span> </div> </footer> <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script> </body> </html>

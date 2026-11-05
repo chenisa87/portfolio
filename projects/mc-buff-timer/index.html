@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="zh-Hant-TW"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Minecraft 技能計時模組 — 吳丞宥</title><meta name="description" content="Fabric 1.21.11 用戶端模組，把技能 buff 的剩餘秒數直接疊在技能格上，快結束時變紅閃爍並響一聲，方便抓補技能的時機、節省魔力。"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="en" href="/en/projects/mc-buff-timer/"><link rel="sitemap" href="/sitemap-index.xml"><meta property="og:type" content="website"><meta property="og:title" content="Minecraft 技能計時模組 — 吳丞宥"><meta property="og:description" content="Fabric 1.21.11 用戶端模組，把技能 buff 的剩餘秒數直接疊在技能格上，快結束時變紅閃爍並響一聲，方便抓補技能的時機、節省魔力。"><meta name="twitter:card" content="summary"><script>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/index.BG-YvohO.css"></head> <body> <header class="top"> <div class="wrap"> <a class="brand" href="/">吳丞宥</a> <div class="tools"> <a class="tool" href="/usage/">用量</a> <a class="tool" href="/en/projects/mc-buff-timer/" hreflang="en">EN</a> <button class="tool" type="button" aria-label="切換深淺色" title="切換深淺色" data-theme-toggle> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg> </button> </div> </div> </header> <main>  <article class="article"> <div class="wrap"> <a class="crumb" href="/#minecraft">← Minecraft</a> <div class="kicker fade"> <span>Minecraft</span> <span class="sep">/</span><span>Fabric 1.21.11</span> <span class="sep">/</span> <span>2026.11</span> <span class="pill in-progress">進行中</span> </div> <h1 class="fade d1">Minecraft 技能計時模組</h1> <p class="lead fade d1">Fabric 1.21.11 用戶端模組，把技能 buff 的剩餘秒數直接疊在技能格上，快結束時變紅閃爍並響一聲，方便抓補技能的時機、節省魔力。</p>   <p class="stack fade d2"><span>Java</span><span>Fabric</span><span>Minecraft Mod</span></p> </div>  <div class="wrap"> <hr class="divider"> <div class="prose"><h2 id="為什麼做">為什麼做</h2>
+<p>伺服器的技能 buff 剩幾秒只用小圖示擠在畫面右上角，打怪時很難注意到，常常太早補（浪費魔力）或太晚補（buff 斷掉）。想要讓秒數直接出現在我正在看的技能圖示上。</p>
+<h2 id="找資料來源">找資料來源</h2>
+<p>一開始以為是原版藥水效果，但背包裡看不到。追下去才發現伺服器把 buff 寫在右側計分板的隊伍前綴裡，格式是 <code>[技能名稱|剩餘時間]</code>，時間有 <code>24</code>、<code>1:30</code>、<code>16m</code> 好幾種寫法。</p>
+<h2 id="功能">功能</h2>
+<ul>
+<li><strong>技能格模式</strong>：秒數疊在每個技能圖示上方，圖示底部再加一條剩餘時間條；位置會自動對齊另一個 QoL 模組的技能 HUD</li>
+<li><strong>自動配對技能 ↔ buff</strong>：大部分 buff 跟技能同名，但有不少例外（例如「黑狩犬」的 buff 叫「狼犬召喚」、「神聖戰吼」會給「獸化」），所以照官方天賦樹整理了一張約 40 個技能的對照表；同一個 buff 只會配給一格</li>
+<li><strong>可以自己調</strong>：編輯畫面裡拖曳秒數改位置、點技能格手動指定要顯示哪個 buff、滾輪調大小</li>
+<li>剩幾秒以下變紅閃爍＋提示音（只對技能格上的 buff），10 秒內顯示到小數點</li>
+<li>開關按鈕／快捷鍵、清單面板模式、<code>/bt debug</code> 把計分板和快捷欄資料存成檔案方便除錯</li>
+</ul>
+<h2 id="技術">技術</h2>
+<ul>
+<li>Minecraft <strong>1.21.11</strong> + <strong>Fabric Loader</strong>，Mojang 官方映射</li>
+<li>每 0.25 秒讀一次計分板，畫面上用時間差平滑倒數（計分板一秒才更新一次）</li>
+<li>解析與配對邏輯放在不依賴 Minecraft 的 <code>core</code> 套件，用實際抓到的資料寫小測試驗證</li>
+</ul>
+<h2 id="心得">心得</h2>
+<p>第一版用「名字有共同字」去猜配對，結果常常配錯；還發現技能 HUD 的四格其實對應快捷欄第 2～5 格。最後是靠 <code>/bt debug</code> 把真實資料倒出來、再對照官方天賦樹，才把配對做準。教訓是：先拿到真實資料再寫規則。</p>
+<p>目前還在實測配對是否全部正確，之後補上截圖。</p></div> <nav class="pager" aria-label="pagination"> <a href="/projects/mc-guild-shop/"><small>← 上一個</small>Minecraft 商會備貨清單模組</a> <a class="next" href="/projects/mc-mod-whitelist/"><small>下一個 →</small>Minecraft 模組白名單與授權服務</a> </nav> </div> </article>  </main> <footer class="foot"> <div class="wrap"> <span>© 2026 吳丞宥</span> <span>以 Astro 打造，部署於 Cloudflare</span> </div> </footer> <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script> </body> </html>

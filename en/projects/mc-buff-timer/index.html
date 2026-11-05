@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Minecraft Buff Timer Mod — Cheng-You Wu</title><meta name="description" content="A Fabric 1.21.11 client mod that overlays each skill buff's remaining seconds right on its skill slot, flashing red with a ping near the end so you recast at the right moment and save mana."><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="zh-Hant-TW" href="/projects/mc-buff-timer/"><link rel="sitemap" href="/sitemap-index.xml"><meta property="og:type" content="website"><meta property="og:title" content="Minecraft Buff Timer Mod — Cheng-You Wu"><meta property="og:description" content="A Fabric 1.21.11 client mod that overlays each skill buff's remaining seconds right on its skill slot, flashing red with a ping near the end so you recast at the right moment and save mana."><meta name="twitter:card" content="summary"><script>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/index.BG-YvohO.css"></head> <body> <header class="top"> <div class="wrap"> <a class="brand" href="/en/">Cheng-You Wu</a> <div class="tools"> <a class="tool" href="/en/usage/">Usage</a> <a class="tool" href="/projects/mc-buff-timer/" hreflang="zh-Hant-TW">中文</a> <button class="tool" type="button" aria-label="Toggle theme" title="Toggle theme" data-theme-toggle> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg> </button> </div> </div> </header> <main>  <article class="article"> <div class="wrap"> <a class="crumb" href="/en/#minecraft">← Minecraft</a> <div class="kicker fade"> <span>Minecraft</span> <span class="sep">/</span><span>Fabric 1.21.11</span> <span class="sep">/</span> <span>Nov 2026</span> <span class="pill in-progress">In progress</span> </div> <h1 class="fade d1">Minecraft Buff Timer Mod</h1> <p class="lead fade d1">A Fabric 1.21.11 client mod that overlays each skill buff&#39;s remaining seconds right on its skill slot, flashing red with a ping near the end so you recast at the right moment and save mana.</p>   <p class="stack fade d2"><span>Java</span><span>Fabric</span><span>Minecraft Mod</span></p> </div>  <div class="wrap"> <hr class="divider"> <div class="prose"><h2 id="why">Why</h2>
+<p>The server only shows buff timers as tiny icons crammed into the top-right corner, which are easy to miss mid-fight. I kept recasting too early (wasting mana) or too late (losing the buff). I wanted the seconds right on the skill icons I’m already looking at.</p>
+<h2 id="finding-the-data">Finding the data</h2>
+<p>I first assumed they were vanilla status effects, but they don’t show in the inventory. It turned out the server writes buffs into team prefixes on the right-side scoreboard as <code>[skill name|time left]</code>, with times like <code>24</code>, <code>1:30</code> or <code>16m</code>.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li><strong>Skill-slot mode</strong>: the seconds sit above each skill icon, with a remaining-time bar along the icon’s bottom edge; positions auto-align with another QoL mod’s skill HUD</li>
+<li><strong>Automatic skill ↔ buff pairing</strong>: most buffs share the skill’s name, but many don’t (e.g. “Black Hound” gives “Wolf Summon”, “Holy War Cry” gives “Beast Form”), so I built a ~40-skill table from the official talent trees; each buff goes to only one slot</li>
+<li><strong>Adjustable</strong>: in the editor, drag the timers, click a slot to pick its buff manually, scroll to resize</li>
+<li>Turns red and flashes with a sound under a threshold (only for slot buffs); shows tenths under 10 s</li>
+<li>On/off button and hotkey, a list-panel mode, and <code>/bt debug</code> to dump scoreboard and hotbar data to a file</li>
+</ul>
+<h2 id="tech">Tech</h2>
+<ul>
+<li>Minecraft <strong>1.21.11</strong> + <strong>Fabric Loader</strong>, official Mojang mappings</li>
+<li>Reads the scoreboard every 0.25 s and interpolates the countdown on screen (the scoreboard only updates once a second)</li>
+<li>Parsing and pairing live in a Minecraft-free <code>core</code> package, tested against real captured data</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<p>The first version guessed pairings by shared characters and often got them wrong; I also found the skill HUD’s four slots actually map to hotbar slots 2–5. Dumping real data with <code>/bt debug</code> and checking it against the official talent trees is what finally made pairing accurate. Lesson: get the real data before writing rules.</p>
+<p>Still verifying that every pairing is correct in play — screenshots coming later.</p></div> <nav class="pager" aria-label="pagination"> <a href="/en/projects/mc-guild-shop/"><small>← Previous</small>Minecraft Guild Shop Prep List Mod</a> <a class="next" href="/en/projects/mc-mod-whitelist/"><small>Next →</small>Minecraft Mod Whitelist &amp; Licensing Service</a> </nav> </div> </article>  </main> <footer class="foot"> <div class="wrap"> <span>© 2026 Cheng-You Wu</span> <span>Built with Astro, deployed on Cloudflare</span> </div> </footer> <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script> </body> </html>

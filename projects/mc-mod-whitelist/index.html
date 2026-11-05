@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="zh-Hant-TW"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Minecraft 模組白名單與授權服務 — 吳丞宥</title><meta name="description" content="自己架的雲端授權服務：控管公會成員能用哪些 Minecraft 模組、記錄使用狀況、即時警示未授權使用，還延伸出副本 PR 排行榜。跑在 Cloudflare Workers + D1，免費方案就夠用。"><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="en" href="/en/projects/mc-mod-whitelist/"><link rel="sitemap" href="/sitemap-index.xml"><meta property="og:type" content="website"><meta property="og:title" content="Minecraft 模組白名單與授權服務 — 吳丞宥"><meta property="og:description" content="自己架的雲端授權服務：控管公會成員能用哪些 Minecraft 模組、記錄使用狀況、即時警示未授權使用，還延伸出副本 PR 排行榜。跑在 Cloudflare Workers + D1，免費方案就夠用。"><meta property="og:image" content="https://portfolio.aaaa920308.workers.dev/projects/mc-mod-whitelist/cover.webp"><meta name="twitter:card" content="summary_large_image"><script>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/index.BG-YvohO.css"></head> <body> <header class="top"> <div class="wrap"> <a class="brand" href="/">吳丞宥</a> <div class="tools"> <a class="tool" href="/usage/">用量</a> <a class="tool" href="/en/projects/mc-mod-whitelist/" hreflang="en">EN</a> <button class="tool" type="button" aria-label="切換深淺色" title="切換深淺色" data-theme-toggle> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg> </button> </div> </div> </header> <main>  <article class="article"> <div class="wrap"> <a class="crumb" href="/#minecraft">← Minecraft</a> <div class="kicker fade"> <span>Minecraft</span> <span class="sep">/</span><span>Cloudflare Workers</span> <span class="sep">/</span> <span>2026.10</span> <span class="pill completed">已完成</span> </div> <h1 class="fade d1">Minecraft 模組白名單與授權服務</h1> <p class="lead fade d1">自己架的雲端授權服務：控管公會成員能用哪些 Minecraft 模組、記錄使用狀況、即時警示未授權使用，還延伸出副本 PR 排行榜。跑在 Cloudflare Workers + D1，免費方案就夠用。</p>   <p class="stack fade d2"><span>JavaScript</span><span>Cloudflare Workers</span><span>Cloudflare D1</span><span>Java</span><span>Minecraft Mod</span></p> </div> <div class="media wrap wide fade d3"> <div class="frame"> <img src="/projects/mc-mod-whitelist/cover.webp" alt="Minecraft 模組白名單與授權服務" decoding="async"> </div> <div class="gallery" aria-label="截圖"> <a href="/projects/mc-mod-whitelist/1.webp" target="_blank" rel="noopener"><img src="/projects/mc-mod-whitelist/1.webp" alt="Minecraft 模組白名單與授權服務 1" loading="lazy"></a><a href="/projects/mc-mod-whitelist/2.webp" target="_blank" rel="noopener"><img src="/projects/mc-mod-whitelist/2.webp" alt="Minecraft 模組白名單與授權服務 2" loading="lazy"></a><a href="/projects/mc-mod-whitelist/3.webp" target="_blank" rel="noopener"><img src="/projects/mc-mod-whitelist/3.webp" alt="Minecraft 模組白名單與授權服務 3" loading="lazy"></a> </div> </div> <div class="wrap"> <hr class="divider"> <div class="prose"><blockquote>
+<p>截圖使用測試資料，不是實際的公會成員。</p>
+</blockquote>
+<h2 id="專案目標">專案目標</h2>
+<p>我替公會寫了幾個 Minecraft 用戶端模組，不希望模組被隨意外流。想要的是：</p>
+<ul>
+<li>一個網站就能管理「誰可以用哪個模組」，可以單一模組授權，也可以一次給全部（包含以後的新模組）</li>
+<li>以後每個新模組都能直接套用同一套驗證</li>
+<li>知道誰在什麼時候用了模組，白名單外的人一用就要知道</li>
+</ul>
+<p>我的定位很實際：模組裝在別人電腦上，懂反編譯的人一定破得了；目標是<strong>讓外流變麻煩、外流了也查得到</strong>，而不是做到絕對防護。</p>
+<h2 id="做法">做法</h2>
+<p><strong>架構</strong></p>
+<pre class="astro-code github-dark-dimmed" style="background-color:#22272e;color:#adbac7; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>模組（Java） ──POST /api/check──▶ Cloudflare Worker ──▶ D1（SQLite）</span></span>
+<span class="line"><span>                                      │</span></span>
+<span class="line"><span>管理後台（單頁 HTML）◀── /admin/api ──┘          Discord Webhook（警示）</span></span></code></pre>
+<p><strong>模組端</strong>：寫成一個不依賴載入器的 <code>LicenseCheck.java</code>（Fabric / Forge 都能用），進入遊戲時用玩家 UUID 非同步驗證，不會卡住遊戲；網站連不上時可以設定暫時放行。新模組只要複製這個檔案、呼叫一行就接好。</p>
+<p><strong>後端（Cloudflare Workers + D1）</strong></p>
+<ul>
+<li>白名單用 <strong>UUID</strong> 而不是玩家名稱（名稱可以改），管理時輸入名稱自動查 UUID</li>
+<li>授權表用 <code>mod_id = '*'</code> 代表全部模組，新模組自動適用</li>
+<li>使用紀錄同一人同一模組每天只記一次，避免灌爆資料庫</li>
+<li>未授權使用推播到 Discord，同一人同一模組 1 小時內只通知一次</li>
+<li>資料表在第一次請求時自動建立，之後的欄位變更與資料搬移用「只執行一次」的 migration 處理</li>
+</ul>
+<p><strong>安全性</strong></p>
+<ul>
+<li>管理密碼與簽章金鑰放在 Cloudflare Secret，不進 Git</li>
+<li>登入用 HMAC 簽章的 Session Cookie（HttpOnly、Secure、SameSite=Strict），比對用 timing-safe 比較</li>
+<li>同一 IP 登入失敗 5 次鎖 15 分鐘；修改類 API 強制 JSON，配合 SameSite 防跨站偽造</li>
+</ul>
+<p><strong>管理後台</strong>：純 HTML + JS 單頁，深色主題、手機可用。總覽頁有未授權警示、14 天用量圖、模組排行；白名單頁可以設定權限、封鎖、備註。</p>
+<h2 id="遇到的問題">遇到的問題</h2>
+<ul>
+<li><strong>Mojang 擋 Cloudflare 的連線</strong>：上線後發現用名稱查 UUID 全部失敗。改成依序嘗試多個查詢服務，並區分「查不到這個人」和「服務暫時失敗」，後者會自動重試。</li>
+<li><strong>雲端環境的部署限制</strong>：設定 Cloudflare 時把密碼放到「組建」的變數區，網站執行時讀不到；查出兩者的差別後修正。</li>
+<li><strong>不想每次加人都登入後台</strong>：加了 <code>whitelist.json</code>，在 GitHub 加一行名字、推上去，部署完網站會自動查 UUID 並加入；名字打錯會在後台顯示提醒。之後在後台手動改的權限不會被檔案蓋回去。</li>
+</ul>
+<h2 id="延伸功能">延伸功能</h2>
+<p>這套服務後來成為其他模組的共用後端：</p>
+<ul>
+<li><strong>公開模組</strong>：某些模組不需要白名單，但仍記錄使用者與版本</li>
+<li><strong>版本提醒</strong>：偵測到更新的模組版本就自動記錄，舊版玩家進遊戲時提醒更新</li>
+<li><strong>副本 PR 排行榜</strong>：模組回報玩家的副本成績，網站用伺服器官網公開的統計重新驗證 PR、依賽季（版本號）分開排名、保留前三名；異常高的數值照收但標記讓我確認</li>
+<li><strong>分享連結</strong>：排行可以產生只給特定人看的連結，能設期限、隨時停用</li>
+</ul>
+<h2 id="成果">成果</h2>
+<ul>
+<li>已上線給公會成員使用，所有模組共用同一套驗證</li>
+<li>加白名單從「登入後台操作」變成「改一行檔案」，也能交給 AI 助手自動處理</li>
+<li>全部跑在 Cloudflare 免費方案上，沒有自己的伺服器要維護</li>
+</ul>
+<h2 id="心得">心得</h2>
+<p>第一次把一個服務從零做到上線、再一路加功能。最大的收穫是學會先想清楚「要防到什麼程度」，再決定要做多複雜；還有雲端平台的各種限制（連線被擋、組建和執行環境不同）往往比程式本身更花時間。</p></div> <nav class="pager" aria-label="pagination"> <a href="/projects/mc-buff-timer/"><small>← 上一個</small>Minecraft 技能計時模組</a> <a class="next" href="/projects/mc-earnings-tracker/"><small>下一個 →</small>Minecraft 收益追蹤模組</a> </nav> </div> </article>  </main> <footer class="foot"> <div class="wrap"> <span>© 2026 吳丞宥</span> <span>以 Astro 打造，部署於 Cloudflare</span> </div> </footer> <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script> </body> </html>

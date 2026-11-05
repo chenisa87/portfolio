@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Minecraft Guild Shop Prep List Mod — Cheng-You Wu</title><meta name="description" content="A Fabric 1.21.11 client mod that adds a &#34;Record buy orders&#34; button beside the server's guild shop, reads this week's buy orders automatically, and shows how many of each item you still need."><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="zh-Hant-TW" href="/projects/mc-guild-shop/"><link rel="sitemap" href="/sitemap-index.xml"><meta property="og:type" content="website"><meta property="og:title" content="Minecraft Guild Shop Prep List Mod — Cheng-You Wu"><meta property="og:description" content="A Fabric 1.21.11 client mod that adds a &#34;Record buy orders&#34; button beside the server's guild shop, reads this week's buy orders automatically, and shows how many of each item you still need."><meta name="twitter:card" content="summary"><script>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/index.BG-YvohO.css"></head> <body> <header class="top"> <div class="wrap"> <a class="brand" href="/en/">Cheng-You Wu</a> <div class="tools"> <a class="tool" href="/en/usage/">Usage</a> <a class="tool" href="/projects/mc-guild-shop/" hreflang="zh-Hant-TW">中文</a> <button class="tool" type="button" aria-label="Toggle theme" title="Toggle theme" data-theme-toggle> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg> </button> </div> </div> </header> <main>  <article class="article"> <div class="wrap"> <a class="crumb" href="/en/#minecraft">← Minecraft</a> <div class="kicker fade"> <span>Minecraft</span> <span class="sep">/</span><span>Fabric 1.21.11</span> <span class="sep">/</span> <span>Nov 2026</span> <span class="pill in-progress">In progress</span> </div> <h1 class="fade d1">Minecraft Guild Shop Prep List Mod</h1> <p class="lead fade d1">A Fabric 1.21.11 client mod that adds a &quot;Record buy orders&quot; button beside the server&#39;s guild shop, reads this week&#39;s buy orders automatically, and shows how many of each item you still need.</p>   <p class="stack fade d2"><span>Java</span><span>Fabric</span><span>Minecraft Mod</span></p> </div>  <div class="wrap"> <hr class="divider"> <div class="prose"><h2 id="why">Why</h2>
+<p>The server’s guild shop buys different items every week, in two kinds: regular orders (unit price, budget, how many it still accepts) and limited orders (one-time, fixed reward). I had to hover over every slot to read the tooltip and could never remember what to gather or how many were still missing.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>When the guild shop opens, a row of buttons appears on its left: <strong>Record</strong>, <strong>Collapse / Expand</strong> and <strong>Clear</strong> (clear needs a double press so it can’t be hit by accident)</li>
+<li>“Record” reads every buy order on the current page into a list — no more hovering slot by slot</li>
+<li>A side panel shows <strong>how many are still needed</strong> for each item (accepted amount minus what’s in your inventory); finished items turn green with a check mark and move to the bottom</li>
+<li>The panel header estimates the total guild coins you’d earn by delivering everything</li>
+<li>Each time you reopen the shop, remaining amounts update automatically</li>
+<li><code>/gs</code> prints only “item × amount still needed” in chat, usable anywhere</li>
+</ul>
+<h2 id="how">How</h2>
+<ul>
+<li>Fabric Screen API adds the buttons after the container screen initialises; a Mixin accessor reads the screen position so the buttons and panel sit on its left</li>
+<li>Item names and lore are parsed with regular expressions: buy / limited buy, unit price, budget, remaining capacity, “required × amount”, reward and inventory count</li>
+<li>Only items named “收購 …” / “限量收購 …” or carrying a “required” line count as orders, so description items and the refresh button aren’t picked up</li>
+<li>Parsing lives in Minecraft-independent classes, so it is tested directly against text from screenshots</li>
+<li>The list is saved as local JSON on a background thread (write temp file, then replace) so the game never stutters</li>
+</ul>
+<h2 id="progress">Progress</h2>
+<ul>
+<li>1.0.0: buttons, panel, list, command</li>
+<li>1.0.1: limited orders supported; fixed description text being read as items; <code>/gs</code> trimmed to just items and amounts</li>
+</ul>
+<p>In progress — screenshots and notes will be added after using it for a while.</p></div> <nav class="pager" aria-label="pagination"> <a href="/en/projects/celest-pr-tracker/"><small>← Previous</small>Celest PR Tracker — Dungeon Performance Mod</a> <a class="next" href="/en/projects/mc-buff-timer/"><small>Next →</small>Minecraft Buff Timer Mod</a> </nav> </div> </article>  </main> <footer class="foot"> <div class="wrap"> <span>© 2026 Cheng-You Wu</span> <span>Built with Astro, deployed on Cloudflare</span> </div> </footer> <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script> </body> </html>

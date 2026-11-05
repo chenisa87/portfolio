@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Minecraft Mod Whitelist &amp; Licensing Service — Cheng-You Wu</title><meta name="description" content="A self-built cloud licensing service that controls which guild members can use which Minecraft mods, logs usage, alerts on unauthorized use, and later grew a dungeon PR leaderboard. Runs on Cloudflare Workers + D1 within the free tier."><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="zh-Hant-TW" href="/projects/mc-mod-whitelist/"><link rel="sitemap" href="/sitemap-index.xml"><meta property="og:type" content="website"><meta property="og:title" content="Minecraft Mod Whitelist &#38; Licensing Service — Cheng-You Wu"><meta property="og:description" content="A self-built cloud licensing service that controls which guild members can use which Minecraft mods, logs usage, alerts on unauthorized use, and later grew a dungeon PR leaderboard. Runs on Cloudflare Workers + D1 within the free tier."><meta property="og:image" content="https://portfolio.aaaa920308.workers.dev/projects/mc-mod-whitelist/cover.webp"><meta name="twitter:card" content="summary_large_image"><script>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/index.BG-YvohO.css"></head> <body> <header class="top"> <div class="wrap"> <a class="brand" href="/en/">Cheng-You Wu</a> <div class="tools"> <a class="tool" href="/en/usage/">Usage</a> <a class="tool" href="/projects/mc-mod-whitelist/" hreflang="zh-Hant-TW">中文</a> <button class="tool" type="button" aria-label="Toggle theme" title="Toggle theme" data-theme-toggle> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg> </button> </div> </div> </header> <main>  <article class="article"> <div class="wrap"> <a class="crumb" href="/en/#minecraft">← Minecraft</a> <div class="kicker fade"> <span>Minecraft</span> <span class="sep">/</span><span>Cloudflare Workers</span> <span class="sep">/</span> <span>Oct 2026</span> <span class="pill completed">Completed</span> </div> <h1 class="fade d1">Minecraft Mod Whitelist &amp; Licensing Service</h1> <p class="lead fade d1">A self-built cloud licensing service that controls which guild members can use which Minecraft mods, logs usage, alerts on unauthorized use, and later grew a dungeon PR leaderboard. Runs on Cloudflare Workers + D1 within the free tier.</p>   <p class="stack fade d2"><span>JavaScript</span><span>Cloudflare Workers</span><span>Cloudflare D1</span><span>Java</span><span>Minecraft Mod</span></p> </div> <div class="media wrap wide fade d3"> <div class="frame"> <img src="/projects/mc-mod-whitelist/cover.webp" alt="Minecraft Mod Whitelist &#38; Licensing Service" decoding="async"> </div> <div class="gallery" aria-label="Screenshots"> <a href="/projects/mc-mod-whitelist/1.webp" target="_blank" rel="noopener"><img src="/projects/mc-mod-whitelist/1.webp" alt="Minecraft Mod Whitelist &#38; Licensing Service 1" loading="lazy"></a><a href="/projects/mc-mod-whitelist/2.webp" target="_blank" rel="noopener"><img src="/projects/mc-mod-whitelist/2.webp" alt="Minecraft Mod Whitelist &#38; Licensing Service 2" loading="lazy"></a><a href="/projects/mc-mod-whitelist/3.webp" target="_blank" rel="noopener"><img src="/projects/mc-mod-whitelist/3.webp" alt="Minecraft Mod Whitelist &#38; Licensing Service 3" loading="lazy"></a> </div> </div> <div class="wrap"> <hr class="divider"> <div class="prose"><blockquote>
+<p>Screenshots use test data, not real guild members.</p>
+</blockquote>
+<h2 id="goal">Goal</h2>
+<p>I write client-side Minecraft mods for my guild and didn’t want them leaking freely. I wanted:</p>
+<ul>
+<li>One website to manage who can use which mod — per mod, or all mods at once (including future ones)</li>
+<li>A single verification method every new mod can reuse</li>
+<li>To know who used a mod and when, and to be alerted the moment someone outside the whitelist tries</li>
+</ul>
+<p>The aim was practical: anything installed on someone else’s machine can be decompiled. The goal is to <strong>make leaking inconvenient and traceable</strong>, not unbreakable.</p>
+<h2 id="approach">Approach</h2>
+<p><strong>Architecture</strong></p>
+<pre class="astro-code github-dark-dimmed" style="background-color:#22272e;color:#adbac7; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Mod (Java) ──POST /api/check──▶ Cloudflare Worker ──▶ D1 (SQLite)</span></span>
+<span class="line"><span>                                      │</span></span>
+<span class="line"><span>Admin dashboard (single-page HTML) ◀── /admin/api      Discord webhook (alerts)</span></span></code></pre>
+<p><strong>Mod side</strong>: a loader-agnostic <code>LicenseCheck.java</code> (works with Fabric and Forge) that verifies the player’s UUID asynchronously on join, so the game never stalls; it can be configured to allow play when the server is unreachable. Adding it to a new mod is one file and one line.</p>
+<p><strong>Backend (Cloudflare Workers + D1)</strong></p>
+<ul>
+<li>Whitelist keyed by <strong>UUID</strong>, not name (names can change); admins type a name and the UUID is looked up</li>
+<li><code>mod_id = '*'</code> in the grants table means “all mods”, so new mods are covered automatically</li>
+<li>Usage is logged once per player, per mod, per day to keep the database small</li>
+<li>Unauthorized use is pushed to Discord, at most once an hour per player and mod</li>
+<li>Tables are created on first request; later schema changes and data moves run as one-time migrations</li>
+</ul>
+<p><strong>Security</strong></p>
+<ul>
+<li>Admin password and signing key live in Cloudflare Secrets, never in Git</li>
+<li>HMAC-signed session cookie (HttpOnly, Secure, SameSite=Strict) with timing-safe comparison</li>
+<li>5 failed logins from one IP locks it for 15 minutes; write APIs require JSON, which together with SameSite blocks cross-site forgery</li>
+</ul>
+<p><strong>Dashboard</strong>: plain HTML + JS, dark theme, mobile friendly. The overview shows unauthorized-use alerts, a 14-day usage chart and per-mod rankings; the whitelist page handles permissions, bans and notes.</p>
+<h2 id="problems-along-the-way">Problems along the way</h2>
+<ul>
+<li><strong>Mojang blocks Cloudflare</strong>: after launch, every name-to-UUID lookup failed. I added fallback lookup services and distinguished “player doesn’t exist” from “service temporarily down”, retrying the latter automatically.</li>
+<li><strong>Build vs. runtime variables</strong>: the secrets were first set in Cloudflare’s build settings, which the running site can’t read; finding the difference fixed login.</li>
+<li><strong>Adding players without logging in</strong>: a <code>whitelist.json</code> in the repo — add a name, push, and after deployment the site looks up the UUID and adds the player, flagging typos in the dashboard. Permissions changed manually in the dashboard are not overwritten by the file.</li>
+</ul>
+<h2 id="extensions">Extensions</h2>
+<p>The service became the shared backend for my other mods:</p>
+<ul>
+<li><strong>Public mods</strong>: some mods need no whitelist but still log users and versions</li>
+<li><strong>Update reminders</strong>: newer mod versions are detected automatically and players on old versions are reminded in game</li>
+<li><strong>Dungeon PR leaderboard</strong>: mods report players’ dungeon results; the site re-verifies percentile ranks against the server’s public statistics, ranks per season (version number), keeps the top three, and flags suspiciously high values for review</li>
+<li><strong>Share links</strong>: leaderboard links for specific people, with optional expiry and the ability to revoke</li>
+</ul>
+<h2 id="results">Results</h2>
+<ul>
+<li>Live and used by guild members; every mod shares the same verification</li>
+<li>Whitelisting went from “log in and click” to “edit one line”, which an AI assistant can also handle</li>
+<li>Runs entirely on Cloudflare’s free tier with no server to maintain</li>
+</ul>
+<h2 id="reflections">Reflections</h2>
+<p>My first service taken from zero to production and then extended over time. The biggest lesson was deciding <em>how much</em> protection is enough before deciding how complex to build — and that platform constraints (blocked connections, build vs. runtime environments) often take more time than the code itself.</p></div> <nav class="pager" aria-label="pagination"> <a href="/en/projects/mc-buff-timer/"><small>← Previous</small>Minecraft Buff Timer Mod</a> <a class="next" href="/en/projects/mc-earnings-tracker/"><small>Next →</small>Minecraft Earnings Tracker Mod</a> </nav> </div> </article>  </main> <footer class="foot"> <div class="wrap"> <span>© 2026 Cheng-You Wu</span> <span>Built with Astro, deployed on Cloudflare</span> </div> </footer> <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script> </body> </html>

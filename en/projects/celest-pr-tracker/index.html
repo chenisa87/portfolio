@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Celest PR Tracker — Dungeon Performance Mod — Cheng-You Wu</title><meta name="description" content="A Fabric 1.21.11 client mod that parses combat stats after every dungeon run, ranks your damage, tanking, healing and clear speed against server-wide official statistics, and keeps personal bests, seasons and charts."><meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="alternate" hreflang="zh-Hant-TW" href="/projects/celest-pr-tracker/"><link rel="sitemap" href="/sitemap-index.xml"><meta property="og:type" content="website"><meta property="og:title" content="Celest PR Tracker — Dungeon Performance Mod — Cheng-You Wu"><meta property="og:description" content="A Fabric 1.21.11 client mod that parses combat stats after every dungeon run, ranks your damage, tanking, healing and clear speed against server-wide official statistics, and keeps personal bests, seasons and charts."><meta name="twitter:card" content="summary"><script>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="/_astro/index.BG-YvohO.css"></head> <body> <header class="top"> <div class="wrap"> <a class="brand" href="/en/">Cheng-You Wu</a> <div class="tools"> <a class="tool" href="/en/usage/">Usage</a> <a class="tool" href="/projects/celest-pr-tracker/" hreflang="zh-Hant-TW">中文</a> <button class="tool" type="button" aria-label="Toggle theme" title="Toggle theme" data-theme-toggle> <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"></path></svg> <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg> </button> </div> </div> </header> <main>  <article class="article"> <div class="wrap"> <a class="crumb" href="/en/#minecraft">← Minecraft</a> <div class="kicker fade"> <span>Minecraft</span> <span class="sep">/</span><span>Fabric 1.21.11</span> <span class="sep">/</span> <span>Nov 2026</span> <span class="pill in-progress">In progress</span> </div> <h1 class="fade d1">Celest PR Tracker — Dungeon Performance Mod</h1> <p class="lead fade d1">A Fabric 1.21.11 client mod that parses combat stats after every dungeon run, ranks your damage, tanking, healing and clear speed against server-wide official statistics, and keeps personal bests, seasons and charts.</p>   <p class="stack fade d2"><span>Java</span><span>Fabric</span><span>Minecraft Mod</span><span>Cloudflare Workers</span></p> </div>  <div class="wrap"> <hr class="divider"> <div class="prose"><h2 id="why">Why</h2>
+<p>The server’s dungeon results are just a wall of numbers — hard to tell whether you actually played well. The official site has server-wide stats, but comparing by hand is tedious. This mod tells you your percentile the moment a run ends.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li><strong>Automatic results</strong>: parses the combat summary in chat (time, damage, damage taken, healing) with zero input</li>
+<li><strong>Four PRs</strong>: damage, tanking, healing and speed, each compared within its own role (DPS / tank / healer)</li>
+<li><strong>Beyond the peak</strong>: shows a multiplier when you exceed the server’s PR99 (e.g. PR100 ×1.35)</li>
+<li><strong>Personal bests</strong>: fastest, highest damage, most tanked and most healed run per dungeon, always re-scored against the latest official data</li>
+<li><strong>Seasons</strong>: detects official balance updates (e.g. V2.2 → V2.3), archives old data and starts a new season automatically</li>
+<li><strong>Charts</strong>: a local HTML dashboard with per-run trends, best and average</li>
+<li><strong>Recovery tools</strong>: unrecognised runs are saved for <code>/prt fix</code>; mis-recorded runs can be removed with <code>/prt undo</code></li>
+</ul>
+<h2 id="technical-highlights">Technical highlights</h2>
+<ul>
+<li>Minecraft <strong>1.21.11</strong> + <strong>Fabric</strong>, ~25 Java classes, ~4,600 lines</li>
+<li>Fetching and file I/O run on a background thread so the game never stutters; run history is cached</li>
+<li>Dungeon detection relies on the boss name in the result header, with chat and scoreboard as fallbacks; values over 5× the server PR99 are treated as a misdetection and not recorded</li>
+<li><strong>Anti-abuse</strong>: manually assigned dungeons must match the boss name; unverified runs only count toward personal records</li>
+<li>A self-hosted backend (Cloudflare Workers + D1) handles usage stats and season settings; the mod works fine offline</li>
+</ul>
+<h2 id="result">Result</h2>
+<p>Released publicly on the server and distributed through Discord; updated regularly from player feedback (currently v1.3.4).</p>
+<h2 id="takeaways">Takeaways</h2>
+<p>The hard part wasn’t computing PR — it was identifying the right dungeon and trusting the data. Message formats vary and the official site sometimes lacks new dungeons, so one misdetection can inflate numbers tenfold. I learned to assume data will be wrong and add checks layer by layer.</p></div> <nav class="pager" aria-label="pagination">  <a class="next" href="/en/projects/mc-guild-shop/"><small>Next →</small>Minecraft Guild Shop Prep List Mod</a> </nav> </div> </article>  </main> <footer class="foot"> <div class="wrap"> <span>© 2026 Cheng-You Wu</span> <span>Built with Astro, deployed on Cloudflare</span> </div> </footer> <script>
+      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : matchMedia('(prefers-color-scheme: dark)').matches;
+        root.dataset.theme = dark ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+      });
+    </script> </body> </html>
