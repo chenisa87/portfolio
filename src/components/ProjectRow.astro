@@ -5,7 +5,7 @@ interface Props { project: Project; lang: Lang }
 const { project, lang } = Astro.props;
 const s = t(lang);
 const d = project.data;
-const meta = [d.category, ...d.tags].filter(Boolean).join(' · ');
+const meta = [...new Set([d.category, ...d.tags].filter(Boolean))].join(' · ');
 ---
 <li>
   <a class="row" href={localePath(lang, `/projects/${project.slug}/`)}>
