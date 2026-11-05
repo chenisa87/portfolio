@@ -69,6 +69,8 @@ const months: { ym: string; lead: number; cells: string[]; sum: number }[] = [];
   }
 }
 const monthMax = Math.max(1, ...months.map((x) => x.sum));
+// Calendar opens on the most recent month that has usage
+const openIdx = latest ? Math.max(0, months.findIndex((m) => m.ym === latest.date.slice(0, 7))) : months.length - 1;
 
 // Totals per tool
 const agentTotals = new Map<string, number>();
@@ -129,7 +131,7 @@ const labels = {
 
         <div class="cal" data-cal>
           {months.map((mo, i) => (
-            <div class="cal-month" data-month={i} hidden={i !== months.length - 1}>
+            <div class="cal-month" data-month={i} data-open={i === openIdx ? '' : undefined} hidden={i !== openIdx}>
               <div class="cal-bar">
                 <button class="tool" type="button" data-step="-1" disabled={i === 0} aria-label="previous">←</button>
                 <div class="cal-title">
@@ -203,7 +205,7 @@ const labels = {
           <h2>{u.months}</h2>
         </div>
         <ul class="bars">
-          {months.slice().reverse().map((mo) => (
+          {months.filter((mo) => mo.sum > 0).reverse().map((mo) => (
             <li>
               <span class="bl">{mo.ym.replace('-', '.')}</span>
               <span class="bt"><i style={`width:${(mo.sum / monthMax) * 100}%`}></i></span>
@@ -232,7 +234,7 @@ const labels = {
     const { days, labels } = JSON.parse(raw);
     const months = [...root.querySelectorAll<HTMLElement>('.cal-month')];
     const detail = root.querySelector<HTMLElement>('[data-detail]')!;
-    let cur = months.length - 1;
+    let cur = Math.max(0, months.findIndex((m) => m.hasAttribute('data-open')));
     const fmt = (n: number) => (n ?? 0).toLocaleString('en-US');
     const short = (m: string) => m.replace(/^claude-/, '').replace(/-\d{8}$/, '');
 
