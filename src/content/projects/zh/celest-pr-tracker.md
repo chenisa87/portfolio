@@ -3,7 +3,7 @@ title: 文靜PR追蹤 — 副本表現分析模組
 summary: Fabric 1.21.11 用戶端模組，每打完一場副本就自動解析戰鬥數據，對照全服官方統計算出輸出／承傷／治療／速度 PR，並保留個人最佳、賽季紀錄與圖表報表。
 date: 2026-11-01
 tags: [Java, Fabric, Minecraft Mod, Cloudflare Workers]
-category: 遊戲模組
+category: Fabric 1.21.11
 status: in-progress
 group: minecraft
 featured: true

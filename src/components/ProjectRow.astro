@@ -1,0 +1,22 @@
+---
+import { t, localePath, formatDate, type Lang } from '../i18n/ui';
+import type { Project } from '../lib/projects';
+interface Props { project: Project; lang: Lang }
+const { project, lang } = Astro.props;
+const s = t(lang);
+const d = project.data;
+const meta = [d.category, ...d.tags].filter(Boolean).join(' · ');
+---
+<li>
+  <a class="row" href={localePath(lang, `/projects/${project.slug}/`)}>
+    <span class="date">{formatDate(d.date, lang)}</span>
+    <span class="title">
+      {d.title}
+      {d.featured && <span class="pill solid">{s.featured}</span>}
+      {d.status !== 'completed' && <span class:list={['pill', d.status]}>{s.status[d.status]}</span>}
+    </span>
+    <span class="arrow" aria-hidden="true">→</span>
+    <span class="sum">{d.summary}</span>
+    {meta && <span class="meta">{meta}</span>}
+  </a>
+</li>

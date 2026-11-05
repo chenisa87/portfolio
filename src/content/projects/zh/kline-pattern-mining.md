@@ -3,8 +3,9 @@ title: 台股 K 線型態探勘
 summary: 用 50+ 檔台股 2018–2025 的日 K 資料，萃取 10 種 K 線特徵、以加權相似度找出「三天後漲跌 ±5%」的型態，並在 2026 年資料上驗證。
 date: 2026-10-04
 tags: [Python, pandas, yfinance, 資料探勘, GUI]
-category: 課程作業
+category: 資料探勘
 status: in-progress
+group: coursework
 featured: true
 ---
 

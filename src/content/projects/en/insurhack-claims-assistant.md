@@ -3,8 +3,9 @@ title: Insurance Service & Claims Assistant
 summary: Team entry with a friend in the Cardif InsurHack campus hackathon, topic 2-1 — helping policyholders understand their coverage and get through claims more smoothly.
 date: 2026-10-15
 tags: [Hackathon, AI, 產品設計]
-category: Competition
+category: Cardif InsurHack
 status: in-progress
+group: competition
 ---
 
 ## Brief

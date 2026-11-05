@@ -3,7 +3,7 @@ title: Minecraft 收益追蹤模組
 summary: Fabric 1.21.11 用戶端模組，一鍵開始／停止計時，自動統計這段時間從伺服器賺到的金錢、經驗與物品，結束時在聊天欄輸出摘要。
 date: 2026-10-14
 tags: [Java, Fabric, Minecraft Mod]
-category: 遊戲模組
+category: Fabric 1.21.11
 status: in-progress
 group: minecraft
 ---

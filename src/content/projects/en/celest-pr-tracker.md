@@ -3,7 +3,7 @@ title: Celest PR Tracker — Dungeon Performance Mod
 summary: A Fabric 1.21.11 client mod that parses combat stats after every dungeon run, ranks your damage, tanking, healing and clear speed against server-wide official statistics, and keeps personal bests, seasons and charts.
 date: 2026-11-01
 tags: [Java, Fabric, Minecraft Mod, Cloudflare Workers]
-category: Game mod
+category: Fabric 1.21.11
 status: in-progress
 group: minecraft
 featured: true

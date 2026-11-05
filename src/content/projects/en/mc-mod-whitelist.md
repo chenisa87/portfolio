@@ -3,7 +3,7 @@ title: Minecraft Mod Whitelist & Licensing Service
 summary: A self-built cloud licensing service that controls which guild members can use which Minecraft mods, logs usage, alerts on unauthorized use, and later grew a dungeon PR leaderboard. Runs on Cloudflare Workers + D1 within the free tier.
 date: 2026-10-14
 tags: [JavaScript, Cloudflare Workers, Cloudflare D1, Java, Minecraft Mod]
-category: Game mod
+category: Cloudflare Workers
 status: completed
 group: minecraft
 cover: /projects/mc-mod-whitelist/cover.webp

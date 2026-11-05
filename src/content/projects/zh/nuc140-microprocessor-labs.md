@@ -3,8 +3,9 @@ title: 微處理機實驗 — Nu-LB-NUC140
 summary: 微處理機課程的上機實作，在新唐 Nu-LB-NUC140 開發板上用 C 與 Keil 控制 GPIO 與板上周邊。
 date: 2026-10-18
 tags: [C, 嵌入式, Keil, NUC140]
-category: 課程作業
+category: 微處理機
 status: in-progress
+group: coursework
 ---
 
 ## 環境

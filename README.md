@@ -5,7 +5,7 @@ Astro 打造的中英雙語作品集，推到 `main` 後由 Cloudflare 自動建
 ## 新增一個專案
 
 ```bash
-npm run new -- my-project "中文標題" "English title"
+npm run new -- my-project "中文標題" "English title" coursework
 ```
 
 會建立：
@@ -21,10 +21,10 @@ npm run new -- my-project "中文標題" "English title"
 | `title` / `summary` | 標題、一句話簡介 |
 | `date` | 日期，決定排序 |
 | `tags` | 技術標籤，首頁可依此篩選 |
-| `category` | 類別，例如 課程作業、競賽、遊戲模組 |
+| `category` | 分類底下的小標，例如課程名稱、比賽名稱 |
 | `status` | `completed` / `in-progress` / `archived` |
-| `featured` | `true` 會置頂並以大卡片顯示 |
-| `group` | `main`（預設，一般作品）或 `minecraft`（首頁獨立的 Minecraft 模組區） |
+| `featured` | `true` 會在該分類置頂並標上「精選」 |
+| `group` | 分類：`competition` 比賽／`coursework` 專題與課程／`side` Side Project（預設）／`minecraft` Minecraft |
 | `draft` | `true` 則不公開 |
 | `cover` / `images` | `/projects/<slug>/cover.png` 等 |
 | `video` | YouTube 網址或 `/projects/<slug>/demo.mp4` |

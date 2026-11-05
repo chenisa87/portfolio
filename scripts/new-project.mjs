@@ -1,10 +1,14 @@
 #!/usr/bin/env node
 // 建立新專案的骨架（中英兩個 Markdown + 圖片資料夾）
-// 用法：npm run new -- <slug> "中文標題" "English title"
+// 用法：npm run new -- <slug> "中文標題" "English title" [competition|coursework|side|minecraft]
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const [slug, zhTitle = '新專案', enTitle = zhTitle] = process.argv.slice(2);
+const [slug, zhTitle = '新專案', enTitle = zhTitle, group = 'side'] = process.argv.slice(2);
+if (!['competition', 'coursework', 'side', 'minecraft'].includes(group)) {
+  console.error('分類必須是 competition / coursework / side / minecraft');
+  process.exit(1);
+}
 if (!slug || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
   console.error('用法：npm run new -- <slug（小寫英數與連字號）> "中文標題" "English title"');
   process.exit(1);
@@ -18,6 +22,8 @@ summary: ${JSON.stringify(summary)}
 date: ${today}
 tags: []
 status: in-progress
+group: ${group}
+# category: 課程或比賽名稱
 featured: false
 # cover: /projects/${slug}/cover.png
 # images: [/projects/${slug}/1.png]

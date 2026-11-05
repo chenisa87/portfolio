@@ -2,6 +2,10 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n/ui';
 
 export type Project = CollectionEntry<'projects'> & { slug: string; translated: boolean };
+export type Group = Project['data']['group'];
+
+/** 首頁顯示順序 */
+export const GROUPS: Group[] = ['competition', 'coursework', 'side', 'minecraft'];
 
 const slugOf = (id: string) => id.split('/').slice(1).join('/');
 
@@ -23,11 +27,10 @@ export async function getProjects(lang: Lang): Promise<Project[]> {
   });
 }
 
-/** Stable color pair from a string, for cover placeholders */
-export function hueOf(s: string) {
-  let h = 0;
-  for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360;
-  return h;
+export function byGroup(list: Project[]) {
+  return GROUPS.map((g) => ({ group: g, items: list.filter((p) => p.data.group === g) })).filter(
+    (s) => s.items.length > 0
+  );
 }
 
 export function youtubeId(url: string) {

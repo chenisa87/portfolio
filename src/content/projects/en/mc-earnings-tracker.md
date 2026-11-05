@@ -3,7 +3,7 @@ title: Minecraft Earnings Tracker Mod
 summary: A Fabric 1.21.11 client mod — hit a hotkey to start/stop, and it tallies the money, XP and items you earned on the server, then posts a summary in chat.
 date: 2026-10-14
 tags: [Java, Fabric, Minecraft Mod]
-category: Game mod
+category: Fabric 1.21.11
 status: in-progress
 group: minecraft
 ---

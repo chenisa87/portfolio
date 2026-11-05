@@ -3,8 +3,9 @@ title: Taiwan Stock Candlestick Pattern Mining
 summary: Mining 2018–2025 daily candles from 50+ Taiwan stocks — 10 candlestick features and weighted similarity matching to find patterns that precede ±5% moves three days later, validated on 2026 data.
 date: 2026-10-04
 tags: [Python, pandas, yfinance, 資料探勘, GUI]
-category: Coursework
+category: Data Mining
 status: in-progress
+group: coursework
 featured: true
 ---
 

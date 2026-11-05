@@ -12,8 +12,9 @@ const projects = defineCollection({
     category: z.string().optional(),
     status: z.enum(['completed', 'in-progress', 'archived']).default('completed'),
     featured: z.boolean().default(false),
-    // main = 一般作品；minecraft = Minecraft 模組，首頁另外一區顯示
-    group: z.enum(['main', 'minecraft']).default('main'),
+    // 分類：competition 比賽｜coursework 專題・課程｜side 個人 Side Project｜minecraft Minecraft 模組
+    group: z.enum(['competition', 'coursework', 'side', 'minecraft']).default('side'),
+    // category：分類底下的小標，例如課程名稱、比賽名稱
     draft: z.boolean().default(false),
     // 圖片放在 public/projects/<slug>/ ，這裡寫 "/projects/<slug>/cover.png"
     cover: z.string().optional(),

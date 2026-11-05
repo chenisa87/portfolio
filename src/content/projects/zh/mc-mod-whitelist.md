@@ -3,7 +3,7 @@ title: Minecraft 模組白名單與授權服務
 summary: 自己架的雲端授權服務：控管公會成員能用哪些 Minecraft 模組、記錄使用狀況、即時警示未授權使用，還延伸出副本 PR 排行榜。跑在 Cloudflare Workers + D1，免費方案就夠用。
 date: 2026-10-14
 tags: [JavaScript, Cloudflare Workers, Cloudflare D1, Java, Minecraft Mod]
-category: 遊戲模組
+category: Cloudflare Workers
 status: completed
 group: minecraft
 cover: /projects/mc-mod-whitelist/cover.webp
