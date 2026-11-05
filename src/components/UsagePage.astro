@@ -7,9 +7,16 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const u = t(lang).usage;
 
-type Day = {
-  date: string; input: number; output: number; cacheWrite: number; cacheRead: number; total: number; models: string[];
+type Tok = { input: number; output: number; cacheWrite: number; cacheRead: number; total: number; models: string[] };
+type Day = Tok & { date: string; agents?: (Tok & { agent: string })[] };
+
+// ccusage agent ids -> display names
+const AGENTS: Record<string, string> = {
+  claude: 'Claude Code', gemini: 'Gemini CLI', codex: 'Codex', copilot: 'Copilot CLI', antigravity: 'Antigravity',
+  opencode: 'OpenCode', amp: 'Amp', droid: 'Droid', codebuff: 'Codebuff', hermes: 'Hermes', pi: 'pi-agent',
+  goose: 'Goose', openclaw: 'OpenClaw', kilo: 'Kilo', kimi: 'Kimi', qwen: 'Qwen', grok: 'Grok', zcode: 'ZCode',
 };
+const agentName = (a: string) => AGENTS[a] ?? a;
 const days: Day[] = ((data as any).days ?? [])
   .filter((d: Day) => /^\d{4}-\d{2}-\d{2}$/.test(d.date))
   .sort((a: Day, b: Day) => a.date.localeCompare(b.date));
@@ -63,6 +70,13 @@ const months: { ym: string; lead: number; cells: string[]; sum: number }[] = [];
 }
 const monthMax = Math.max(1, ...months.map((x) => x.sum));
 
+// Totals per tool
+const agentTotals = new Map<string, number>();
+for (const d of days) for (const a of d.agents ?? []) agentTotals.set(a.agent, (agentTotals.get(a.agent) ?? 0) + a.total);
+const agentList = [...agentTotals.entries()].filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+const agentMax = Math.max(1, ...agentList.map(([, v]) => v));
+const kicker = agentList.length ? agentList.map(([a]) => agentName(a)).join(' · ') : u.kicker;
+
 // Past-year heatmap: 53 weeks ending this week
 const end = new Date(`${today}T00:00:00Z`);
 const start = new Date(end); start.setUTCDate(start.getUTCDate() - 364 - start.getUTCDay());
@@ -78,15 +92,17 @@ const updated = (data as any).updatedAt
     })
   : null;
 
-const clientData = Object.fromEntries(days.map((d) => [d.date, d]));
+const clientData = Object.fromEntries(
+  days.map((d) => [d.date, { ...d, agents: (d.agents ?? []).filter((a) => a.total > 0).map((a) => ({ ...a, name: agentName(a.agent) })) }])
+);
 const labels = {
   lang, weekdays: u.weekdays, input: u.input, output: u.output, cacheWrite: u.cacheWrite,
-  cacheRead: u.cacheRead, models: u.models, noUse: u.noUse, total: u.total,
+  cacheRead: u.cacheRead, models: u.models, noUse: u.noUse, total: u.total, byAgent: u.byAgent,
 };
 ---
 <Base lang={lang} title={u.title} description={u.lead}>
   <section class="intro wrap usage-intro">
-    <p class="role fade">{u.kicker}</p>
+    <p class="role fade">{kicker}</p>
     <h1 class="fade d1">{u.title}</h1>
     <p class="bio fade d1">{u.lead}</p>
   </section>
@@ -143,9 +159,27 @@ const labels = {
         </div>
       </section>
 
+      {agentList.length > 0 && (
+        <section class="group wrap" id="tools">
+          <div class="group-head">
+            <span class="num">02</span>
+            <h2>{u.byAgent}</h2>
+          </div>
+          <ul class="bars agents">
+            {agentList.map(([a, v]) => (
+              <li>
+                <span class="bl">{agentName(a)}</span>
+                <span class="bt"><i style={`width:${(v / agentMax) * 100}%`}></i></span>
+                <span class="bv" title={full(v)}>{compact(v)}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section class="group wrap wide-scroll" id="year">
         <div class="group-head">
-          <span class="num">02</span>
+          <span class="num">{agentList.length > 0 ? '03' : '02'}</span>
           <h2>{u.year}</h2>
           <span class="desc legend">{u.less}<i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>{u.more}</span>
         </div>
@@ -165,7 +199,7 @@ const labels = {
 
       <section class="group wrap" id="months">
         <div class="group-head">
-          <span class="num">03</span>
+          <span class="num">{agentList.length > 0 ? '04' : '03'}</span>
           <h2>{u.months}</h2>
         </div>
         <ul class="bars">
@@ -223,9 +257,13 @@ const labels = {
         [labels.cacheWrite, d.cacheWrite], [labels.cacheRead, d.cacheRead],
       ].map(([k, v]) => `<div><span>${k}</span><b>${fmt(v as number)}</b></div>`).join('');
       const models = (d.models ?? []).map((x: string) => `<span>${short(x)}</span>`).join('');
+      const agents = (d.agents ?? []).length > 1
+        ? `<p class="dm">${labels.byAgent}：${d.agents.map((a: any) => `<span>${a.name} ${fmt(a.total)}</span>`).join('')}</p>`
+        : (d.agents ?? []).length === 1 ? `<p class="dm">${labels.byAgent}：<span>${d.agents[0].name}</span></p>` : '';
       detail.innerHTML = `
         <div class="dt"><b>${title}</b><span>${labels.total} <strong>${fmt(d.total)}</strong></span></div>
         <div class="dg">${rows}</div>
+        ${agents}
         ${models ? `<p class="dm">${labels.models}：${models}</p>` : ''}`;
     };
 
