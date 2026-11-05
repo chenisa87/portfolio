@@ -1,6 +1,209 @@
 {
-  "updatedAt": null,
-  "timezone": "Asia/Taipei",
-  "source": "ccusage",
-  "days": []
+ "updatedAt": "2026-11-05T10:55:58Z",
+ "timezone": "Asia/Taipei",
+ "source": "ccusage",
+ "days": [
+  {
+   "input": 99645,
+   "output": 12910,
+   "cacheWrite": 0,
+   "cacheRead": 410709,
+   "total": 528129,
+   "models": [
+    "gemini-2.5-pro"
+   ],
+   "date": "2025-12-09",
+   "agents": [
+    {
+     "input": 99645,
+     "output": 12910,
+     "cacheWrite": 0,
+     "cacheRead": 410709,
+     "total": 528129,
+     "models": [
+      "gemini-2.5-pro"
+     ],
+     "agent": "gemini"
+    }
+   ]
+  },
+  {
+   "input": 164366,
+   "output": 9362,
+   "cacheWrite": 0,
+   "cacheRead": 606931,
+   "total": 802250,
+   "models": [
+    "gemini-2.5-flash",
+    "gemini-2.5-pro"
+   ],
+   "date": "2025-12-10",
+   "agents": [
+    {
+     "input": 164366,
+     "output": 9362,
+     "cacheWrite": 0,
+     "cacheRead": 606931,
+     "total": 802250,
+     "models": [
+      "gemini-2.5-pro",
+      "gemini-2.5-flash"
+     ],
+     "agent": "gemini"
+    }
+   ]
+  },
+  {
+   "input": 245490,
+   "output": 26106,
+   "cacheWrite": 0,
+   "cacheRead": 995392,
+   "total": 1279904,
+   "models": [
+    "gemini-2.5-flash",
+    "gemini-3-flash-preview",
+    "gemini-3.1-pro-preview"
+   ],
+   "date": "2026-05-10",
+   "agents": [
+    {
+     "input": 245490,
+     "output": 26106,
+     "cacheWrite": 0,
+     "cacheRead": 995392,
+     "total": 1279904,
+     "models": [
+      "gemini-2.5-flash",
+      "gemini-3-flash-preview",
+      "gemini-3.1-pro-preview"
+     ],
+     "agent": "gemini"
+    }
+   ]
+  },
+  {
+   "input": 213447,
+   "output": 25439,
+   "cacheWrite": 0,
+   "cacheRead": 1432374,
+   "total": 1684039,
+   "models": [
+    "gemini-3-flash-preview",
+    "gemini-3.1-pro-preview"
+   ],
+   "date": "2026-05-14",
+   "agents": [
+    {
+     "input": 213447,
+     "output": 25439,
+     "cacheWrite": 0,
+     "cacheRead": 1432374,
+     "total": 1684039,
+     "models": [
+      "gemini-3-flash-preview",
+      "gemini-3.1-pro-preview"
+     ],
+     "agent": "gemini"
+    }
+   ]
+  },
+  {
+   "input": 150112,
+   "output": 9342,
+   "cacheWrite": 0,
+   "cacheRead": 284787,
+   "total": 451713,
+   "models": [
+    "gemini-3-flash-preview",
+    "gemini-3.1-pro-preview"
+   ],
+   "date": "2026-05-21",
+   "agents": [
+    {
+     "input": 150112,
+     "output": 9342,
+     "cacheWrite": 0,
+     "cacheRead": 284787,
+     "total": 451713,
+     "models": [
+      "gemini-3-flash-preview",
+      "gemini-3.1-pro-preview"
+     ],
+     "agent": "gemini"
+    }
+   ]
+  },
+  {
+   "input": 314016,
+   "output": 50946,
+   "cacheWrite": 0,
+   "cacheRead": 3024580,
+   "total": 3405890,
+   "models": [
+    "gemini-3-flash-preview"
+   ],
+   "date": "2026-06-17",
+   "agents": [
+    {
+     "input": 314016,
+     "output": 50946,
+     "cacheWrite": 0,
+     "cacheRead": 3024580,
+     "total": 3405890,
+     "models": [
+      "gemini-3-flash-preview"
+     ],
+     "agent": "gemini"
+    }
+   ]
+  },
+  {
+   "input": 3400605,
+   "output": 66194,
+   "cacheWrite": 0,
+   "cacheRead": 15580486,
+   "total": 19190944,
+   "models": [
+    "gemini-3.5-flash-medium"
+   ],
+   "date": "2026-06-23",
+   "agents": [
+    {
+     "input": 3400605,
+     "output": 66194,
+     "cacheWrite": 0,
+     "cacheRead": 15580486,
+     "total": 19190944,
+     "models": [
+      "gemini-3.5-flash-medium"
+     ],
+     "agent": "antigravity"
+    }
+   ]
+  },
+  {
+   "input": 225134,
+   "output": 30677,
+   "cacheWrite": 0,
+   "cacheRead": 291972,
+   "total": 560834,
+   "models": [
+    "gemini-3.5-flash-medium"
+   ],
+   "date": "2026-06-26",
+   "agents": [
+    {
+     "input": 225134,
+     "output": 30677,
+     "cacheWrite": 0,
+     "cacheRead": 291972,
+     "total": 560834,
+     "models": [
+      "gemini-3.5-flash-medium"
+     ],
+     "agent": "antigravity"
+    }
+   ]
+  }
+ ]
 }
